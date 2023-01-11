@@ -1,0 +1,16 @@
+
+logging:
+  level:
+    root: info
+    com.batchproject.springbatch: debug
+
+spring:
+  batch:
+    job:
+      name: ${job.name:NONE}
+    jpa:
+      hibernate:
+        ddl-auto: update
+      show-sql: true
+      properties:
+
