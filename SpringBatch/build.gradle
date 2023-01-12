@@ -1,0 +1,44 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.7.7'
+    id 'io.spring.dependency-management' version '1.1.0'
+}
+
+group = 'com.batchproject'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
+    //implementation 'org.springframework.batch:spring-batch-core:4.2.7.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.mariadb.jdbc:mariadb-java-client'
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.batch:spring-batch-test'
+    //testImplementation group: 'org.springframework.batch', name: 'spring-batch-test', version: '4.2.2.RELEASE'
+
+
+    //implementation group: 'org.springframework.integration', name: 'spring-integration-http', version: '5.2.11.RELEASE'
+    //implementation group: 'org.hibernate', name: 'hibernate-entitymanager', version: '5.5.6'
+
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
