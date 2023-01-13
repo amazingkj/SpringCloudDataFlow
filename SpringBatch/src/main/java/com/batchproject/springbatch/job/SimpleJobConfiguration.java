@@ -43,7 +43,7 @@ public class SimpleJobConfiguration {
     public Step taskletJob_step2(@Value("#{jobParameters[date]}") String date) {
         return stepBuilderFactory.get("taskletJob_step2")
                 .tasklet((a, b) -> {
-                    log.debug(" -> step1 -> [step2]"+date);
+                    log.debug(" -> step1 -> [step2]" + date);
                     return RepeatStatus.FINISHED;
                 }).build();
     }

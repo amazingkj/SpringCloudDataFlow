@@ -2,24 +2,48 @@
 logging:
   level:
     root: info
-    com.batchproject.springbatch: info
+    com.batchproject.springbatch: debug
+
+
+#spring:
+#  datasource:
+#    url: jdbc:oracle:thin:@127.0.0.1:1521:XE
+#    username: user01
+#    password: user01
+#    driver-class-name: oracle.jdbc.driver.OracleDriver
+#    jpa:
+#      open-in-view: false
+#      show-sql: true
+#      format_sql: true
+#      hibernate:
+#        ddl-auto: update
+#  config:
+#    activate:
+#      on-profile: oracle
+
 
 spring:
+  integration:
+    jdbc:
+      initialize-schema=never
   batch:
     job:
-      #enabled: false
       name: ${job.name:NONE}
-    jdbc:
-      initialize-schema: always
-    datasource:
-      url: jdbc:mariadb://localhost:3306/first
-      driver-class-name: org.mariadb.jdbc.Driver
-      username: user01
-      password: user01
-    jpa:
-      hibernate:
-        ddl-auto: update
+  datasource:
+    #jdbc-url: jdbc:mysql://localhost:3306/first
+    #jdbc-url: jdbc:mariadb://127.0.0.1:3306/first
+    url: jdbc:mysql://localhost:3306/first
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    #driver-class-name: org.mariadb.jdbc.Driver
+    username: user01
+    password: user01
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: update
       show-sql: true
-      properties:
-        hibernate:
-         format_sql: true
+  config:
+    activate:
+      on-profile: mariaDB
+
+
