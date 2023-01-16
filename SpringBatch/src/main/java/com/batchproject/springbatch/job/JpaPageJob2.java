@@ -30,6 +30,8 @@ public class JpaPageJob2 {
 
     private int chunksSize = 10;
 
+
+    //DB to DB
     @Bean
     public Job JpaPageJob2_batchBuild() {
         return jobBuilderFactory.get("jpaPageJob2")
