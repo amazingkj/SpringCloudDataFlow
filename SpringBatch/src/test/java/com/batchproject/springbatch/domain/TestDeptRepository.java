@@ -8,16 +8,16 @@ import org.springframework.test.annotation.Commit;
 @SpringBootTest
 public class TestDeptRepository {
 
-    @Autowired
-    DeptRepository deptRepository;
-
-    @Test
-    @Commit
-    public void dept01(){
-
-        for(int i=1; i<101; i++){
-            deptRepository.save(new Dept(i,"dName_"+String.valueOf(i),"loc_"+String.valueOf(i)));
-
-        }
-    }
+//    @Autowired
+//    DeptRepository deptRepository;
+//
+//    @Test
+//    @Commit
+//    public void dept01(){
+//
+//        for(int i=1; i<101; i++){
+//            deptRepository.save(new Dept(i,"dName_"+String.valueOf(i),"loc_"+String.valueOf(i)));
+//
+//        }
+//    }
 }
