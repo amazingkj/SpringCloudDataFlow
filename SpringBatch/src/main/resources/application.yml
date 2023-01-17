@@ -7,6 +7,25 @@ logging:
 spring.batch.job.names: ${job.name:NONE}
 
 spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/second?allowPublicKeyRetrieval=true&useSSL=false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: user02
+    password: user02
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+  config:
+    activate:
+      on-profile: mysql
+
+---
+spring:
   integration:
     jdbc: initialize-schema=never
   datasource:
@@ -19,9 +38,12 @@ spring:
     password: user01
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    show-sql: true
     hibernate:
       ddl-auto: update
-      show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
   config:
     activate:
       on-profile: mariaDB
