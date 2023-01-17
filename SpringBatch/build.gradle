@@ -14,28 +14,39 @@ configurations {
     }
 }
 
+jar {
+    enabled = false
+}
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+    //implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-batch'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.mariadb.jdbc:mariadb-java-client'
     //compileOnly 'org.projectlombok:lombok'
-   // runtimeOnly 'com.h2database:h2'
+    //runtimeOnly 'com.h2database:h2'
 
     implementation 'com.mysql:mysql-connector-j:8.0.31'
     runtimeOnly 'com.oracle.database.jdbc:ojdbc8'
 
+    implementation 'org.quartz-scheduler:quartz:2.3.2'
+
+
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.batch:spring-batch-test'
+    //testImplementation 'org.springframework.cloud:spring-cloud-task-batch'
 
     //implementation group: 'org.springframework.integration', name: 'spring-integration-http', version: '5.2.11.RELEASE'
     //implementation group: 'org.hibernate', name: 'hibernate-entitymanager', version: '5.5.6'
+
+    implementation 'org.springframework.cloud:spring-cloud-starter-task:2.4.3'
+    implementation 'org.springframework.cloud:spring-cloud-task-core:2.4.1'
 
 }
 
