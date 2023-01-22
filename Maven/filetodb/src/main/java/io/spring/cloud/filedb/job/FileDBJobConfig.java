@@ -64,18 +64,17 @@ public class FileDBJobConfig {
         flatFileItemReader.setResource(new ClassPathResource("csvInput/FileDBJob_input.csv")); //resource/csvInput/~- 경로에서 읽어오는 자료
         //flatFileItemReader.setLineMapper(((line, lineNumber) -> new OneDto(lineNumber+","+line)));
 
-        DefaultLineMapper<DeptDTO> dtoDefaultLineMapper = new DefaultLineMapper<>();
-
-        DelimitedLineTokenizer delimitedLineTokenizer = new DelimitedLineTokenizer();
-        delimitedLineTokenizer.setNames("deptNo","dName", "loc");//dto 컬럼명
-        delimitedLineTokenizer.setDelimiter(",");//구분자
+        DefaultLineMapper<DeptDTO> lineMapper = new DefaultLineMapper<>();
+        DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
+        lineTokenizer.setNames("deptNo","dName", "loc");//dto 컬럼명
+        lineTokenizer.setDelimiter(",");//구분자
 
         BeanWrapperFieldSetMapper<DeptDTO> beanWrapperFieldSetMapper = new BeanWrapperFieldSetMapper<>();
         beanWrapperFieldSetMapper.setTargetType(DeptDTO.class);
 
-        dtoDefaultLineMapper.setLineTokenizer(delimitedLineTokenizer);
-        dtoDefaultLineMapper.setFieldSetMapper(beanWrapperFieldSetMapper);
-        flatFileItemReader.setLineMapper(dtoDefaultLineMapper);
+        lineMapper.setLineTokenizer(lineTokenizer);
+        lineMapper.setFieldSetMapper(beanWrapperFieldSetMapper);
+        flatFileItemReader.setLineMapper(lineMapper);
 
         return flatFileItemReader;
     }
