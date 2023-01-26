@@ -7,6 +7,7 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class DeptDTO {
 
     Integer deptNo;
