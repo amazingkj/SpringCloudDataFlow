@@ -1,5 +1,4 @@
 
-spring.batch.job.names: ${job.name:NONE}
 
 spring:
   #main:
@@ -8,15 +7,7 @@ spring:
     jdbc:
       initialize-schema: "always"
   datasource:
-    url: jdbc:mysql://localhost:3306/second?allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:mysql://localhost:3306/second?allowPublicKeyRetrieval=true
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: user02
     password: user02
-  jpa:
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    show-sql: true
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        format_sql: true

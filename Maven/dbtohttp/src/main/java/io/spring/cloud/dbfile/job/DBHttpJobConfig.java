@@ -14,14 +14,12 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
-import org.springframework.batch.support.transaction.TransactionAwareProxyFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
 import java.util.List;
 
 
