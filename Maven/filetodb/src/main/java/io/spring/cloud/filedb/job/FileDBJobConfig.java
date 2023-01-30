@@ -1,5 +1,6 @@
 package io.spring.cloud.filedb.job;
 
+import com.thoughtworks.xstream.XStream;
 import io.spring.cloud.filedb.dto.Dept;
 import io.spring.cloud.filedb.dto.DeptDTO;
 import lombok.RequiredArgsConstructor;
@@ -14,20 +15,20 @@ import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourc
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.item.file.FlatFileItemReader;
-import org.springframework.batch.item.file.FlatFileItemWriter;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
-import org.springframework.batch.item.file.builder.FlatFileItemWriterBuilder;
-import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
-import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.separator.SimpleRecordSeparatorPolicy;
-import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
-import org.springframework.batch.item.file.transform.PassThroughLineAggregator;
+import org.springframework.batch.item.json.JacksonJsonObjectReader;
+import org.springframework.batch.item.json.JsonItemReader;
+import org.springframework.batch.item.json.builder.JsonItemReaderBuilder;
+import org.springframework.batch.item.xml.StaxEventItemReader;
+import org.springframework.batch.item.xml.builder.StaxEventItemReaderBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
-
+import org.springframework.oxm.xstream.XStreamMarshaller;
 import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Slf4j
@@ -40,11 +41,15 @@ public class FileDBJobConfig {
     private final DataSource dataSource;
     private static final int chunkSize = 5;
 
+
+
     @Bean
     public Job FileDBJob() throws Exception {
         return jobBuilderFactory.get("FileDBJob")
                 .incrementer(new RunIdIncrementer())
-                .start(FileDBJob_buildStep())
+                //.start(FileDBJob_buildStep())
+                //.start(XmlFileDBJob_buildStep())
+                .start(JsonFileDBJob_buildStep())
                 .build();
     }
 
@@ -58,6 +63,95 @@ public class FileDBJobConfig {
     }
 
     @Bean
+    public Step XmlFileDBJob_buildStep() throws Exception {
+        return stepBuilderFactory.get("XmlFileDBJob_buildStep")
+                .<DeptDTO,Dept>chunk(chunkSize)
+                .reader(customXmlItemReader())
+                .writer(jdbcBatchItemWriter())
+                .build();
+    }
+
+    @Bean
+    public Step JsonFileDBJob_buildStep() throws Exception {
+        return stepBuilderFactory.get("JsonFileDBJob_buildStep")
+                .<DeptDTO, Dept>chunk(chunkSize)
+                .reader(customJsonItemReader())
+                .writer(jdbcBatchItemWriter())
+                .build();
+    }
+
+
+    /*xml*/
+
+    public StaxEventItemReader<DeptDTO> customXmlItemReader() {
+        return new StaxEventItemReaderBuilder<DeptDTO>()
+                .name("customXmlItemReader")
+                .resource(new ClassPathResource("csvInput/dept_xmlInput.xml"))
+                .addFragmentRootElements("Dept")
+                .unmarshaller(itemMarshaller())
+                .build();
+    }
+
+
+    public ItemWriter<DeptDTO> customXmlItemWriter() {
+
+        log.info("++++XmlItemWriter++++");
+        return items -> {
+            for (DeptDTO item : items) {
+                log.info("{}",item.toString());
+            }
+        };
+    }
+
+
+    public XStreamMarshaller itemMarshaller() {
+        Map<String, Class<?>> aliases = new HashMap<>();
+
+
+        aliases.put("Dept", DeptDTO.class); // tag 전체 타입
+        aliases.put("deptNo", Integer.class); // 두번째부터는 각 항목의 타입
+        aliases.put("dName", String.class);
+        aliases.put("loc", String.class);
+        aliases.put("etc", String.class);
+
+        XStreamMarshaller xStreamMarshaller = new XStreamMarshaller();
+        xStreamMarshaller.setAliases(aliases);
+
+        //보안 프레임워크 구성 에러 해결
+        XStream xStream = xStreamMarshaller.getXStream();
+        xStream.allowTypes(new Class[] {
+                DeptDTO.class
+        });
+
+        return xStreamMarshaller;
+    }
+
+    /*json*/
+
+    public JsonItemReader<DeptDTO> customJsonItemReader() {
+        return new JsonItemReaderBuilder<DeptDTO>()
+                .name("customJsonItemReader")
+                .jsonObjectReader(new JacksonJsonObjectReader<>(DeptDTO.class))
+                .resource(new ClassPathResource("csvInput/dept_JsonInput.json"))
+                .build();
+    }
+
+
+    public ItemWriter<DeptDTO> customJsonItemWriter() {
+
+        log.info("++++JsonItemWriter++++");
+        return items -> {
+            for (DeptDTO item : items) {
+                log.info("{}",item.toString());
+            }
+        };
+    }
+
+
+
+    /*csv*/
+
+
     public FlatFileItemReader<DeptDTO> FileDBJob_FileReader(){
         return new FlatFileItemReaderBuilder<DeptDTO>()
                 .name("FileDBJob_FileReader")
@@ -88,6 +182,8 @@ public class FileDBJobConfig {
 
         return itemWriter;
     }
+
+
 
 
 }
