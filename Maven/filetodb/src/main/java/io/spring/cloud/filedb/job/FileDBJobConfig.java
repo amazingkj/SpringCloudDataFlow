@@ -15,9 +15,11 @@ import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.FlatFileItemWriter;
+import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.builder.FlatFileItemWriterBuilder;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
+import org.springframework.batch.item.file.separator.SimpleRecordSeparatorPolicy;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.batch.item.file.transform.PassThroughLineAggregator;
 import org.springframework.context.annotation.Bean;
@@ -39,7 +41,7 @@ public class FileDBJobConfig {
     private static final int chunkSize = 5;
 
     @Bean
-    public Job FileDBJob(){
+    public Job FileDBJob() throws Exception {
         return jobBuilderFactory.get("FileDBJob")
                 .incrementer(new RunIdIncrementer())
                 .start(FileDBJob_buildStep())
@@ -47,52 +49,39 @@ public class FileDBJobConfig {
     }
 
     @Bean
-    public Step FileDBJob_buildStep(){
+    public Step FileDBJob_buildStep() throws Exception {
         return stepBuilderFactory.get("FileDBJob_buildStep")
                 .<DeptDTO, Dept>chunk(chunkSize)
                 .reader(FileDBJob_FileReader())
-                .writer(FileDBJob_FileWriter())
                 .writer(jdbcBatchItemWriter())
-              //  .writer(Dept -> Dept.stream().forEach(i -> {
-           // log.debug((i.toString()));}))
                 .build();
     }
 
     @Bean
     public FlatFileItemReader<DeptDTO> FileDBJob_FileReader(){
-        FlatFileItemReader<DeptDTO> flatFileItemReader = new FlatFileItemReader<>();
-        flatFileItemReader.setResource(new ClassPathResource("csvInput/FileDBJob_input.csv")); //resource/csvInput/~- 경로에서 읽어오는 자료
-        //flatFileItemReader.setLineMapper(((line, lineNumber) -> new OneDto(lineNumber+","+line)));
-
-        DefaultLineMapper<DeptDTO> lineMapper = new DefaultLineMapper<>();
-        DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
-        lineTokenizer.setNames("deptNo","dName", "loc");//dto 컬럼명
-        lineTokenizer.setDelimiter(",");//구분자
-
-        BeanWrapperFieldSetMapper<DeptDTO> beanWrapperFieldSetMapper = new BeanWrapperFieldSetMapper<>();
-        beanWrapperFieldSetMapper.setTargetType(DeptDTO.class);
-
-        lineMapper.setLineTokenizer(lineTokenizer);
-        lineMapper.setFieldSetMapper(beanWrapperFieldSetMapper);
-        flatFileItemReader.setLineMapper(lineMapper);
-
-        return flatFileItemReader;
-    }
-
-    @Bean
-    public FlatFileItemWriter<Dept> FileDBJob_FileWriter(){
-        return new FlatFileItemWriterBuilder<Dept>()
-                .name("FileDBJob_FileWriter")
-                .resource(new FileSystemResource("output/FileDBJob_output.csv"))
-                .lineAggregator(new PassThroughLineAggregator<>())
+        return new FlatFileItemReaderBuilder<DeptDTO>()
+                .name("FileDBJob_FileReader")
+                .encoding("UTF-8")
+                .resource(new ClassPathResource("csvInput/new_input.csv"))
+                .delimited().delimiter(",")
+                .names("deptNo","dName", "loc")
+                .targetType(DeptDTO.class)
+                .recordSeparatorPolicy(new SimpleRecordSeparatorPolicy() {
+                    @Override
+                    public String postProcess(String record) {
+                        return record.trim();
+                    }
+                })
                 .build();
     }
+
+
 
     private ItemWriter<Dept> jdbcBatchItemWriter() {
         JdbcBatchItemWriter<Dept> itemWriter = new JdbcBatchItemWriterBuilder<Dept>()
                 .dataSource(dataSource)
                 .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
-                .sql("insert into dept(dept_no, d_name, loc, etc) values(:deptNo, :dName, :loc, etc)")
+                .sql("insert into dept(dept_no, d_name, loc, etc) values(:deptNo, :dName, :loc, :etc)")
                 .build();
 
         itemWriter.afterPropertiesSet();
