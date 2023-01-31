@@ -1,0 +1,28 @@
+custom:
+  task:
+    name: ${task.name}
+    #properties: ${properties:NULL}
+    #argument: ${argument:NULL}
+    cronschedule: ${cronschedule:5 * * * * ?}
+
+
+spring:
+  quartz:
+    job-store-type: "jdbc"
+    jdbc:
+      initialize-schema: "always"
+  main:
+    web-application-type: none
+  batch:
+    jdbc:
+      initialize-schema: "always"
+    #job:
+    #  names: ${job.name:NONE}
+  datasource:
+    url: jdbc:mysql://localhost:3306/second?allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: user02
+    password: user02
+
+
+
