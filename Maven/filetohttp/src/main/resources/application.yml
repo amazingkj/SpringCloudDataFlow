@@ -1,5 +1,4 @@
 
-
 spring:
   main:
     web-application-type: none
@@ -11,3 +10,5 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: user02
     password: user02
+server:
+  port: 8083
