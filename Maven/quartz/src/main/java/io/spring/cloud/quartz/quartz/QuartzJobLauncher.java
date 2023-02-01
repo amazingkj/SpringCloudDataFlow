@@ -24,6 +24,7 @@ import java.net.URI;
 public class QuartzJobLauncher extends QuartzJobBean {
 
     private final RestTemplate restTemplate;
+    @Autowired
     private final CustomJobParameter jobParameter;
 
     @Override
@@ -49,7 +50,7 @@ public class QuartzJobLauncher extends QuartzJobBean {
                 .encode()
                 .toUri();
 
-        log.info("uri");
+        log.info(String.valueOf(uri));
 
         ResponseEntity<String> exchange = restTemplate.exchange(uri, HttpMethod.POST, Entity, String.class);
 

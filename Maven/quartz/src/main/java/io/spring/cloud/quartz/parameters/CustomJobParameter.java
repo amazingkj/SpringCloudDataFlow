@@ -2,6 +2,7 @@ package io.spring.cloud.quartz.parameters;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import java.util.Objects;
 @Slf4j
 @Getter
 @NoArgsConstructor
+@ToString
 @Component
 public class CustomJobParameter {
 
@@ -21,26 +23,29 @@ public class CustomJobParameter {
     private String properties ;
     private String argument;
 
+
     @Value("${custom.task.cronschedule}")
     public void setCronschedule(String cronschedule) {
         this.cronschedule = cronschedule;
     }
+
 
     @Value("${custom.task.name}")
     public void setName(String name) {
         this.name = name;
     }
 
-    /*
+
     @Value("${custom.task.properties}")
     public void setProperties(String properties) {
         this.properties = properties;
     }
 
+
     @Value("${custom.task.argument}")
     public void setArgument(String argument) {
         this.argument = argument;
     }
-    */
+
 
 }

@@ -1,9 +1,9 @@
 custom:
   task:
     name: ${task.name}
-    #properties: ${properties:NULL}
-    #argument: ${argument:NULL}
-    cronschedule: ${cronschedule:5 * * * * ?}
+    properties: ${properties:NULL}
+    argument: ${argument:NULL}
+    cronschedule: ${cronschedule}
 
 
 spring:
@@ -16,7 +16,8 @@ spring:
   batch:
     jdbc:
       initialize-schema: "always"
-    #job:
+    job:
+      enabled: false
     #  names: ${job.name:NONE}
   datasource:
     url: jdbc:mysql://localhost:3306/second?allowPublicKeyRetrieval=true
