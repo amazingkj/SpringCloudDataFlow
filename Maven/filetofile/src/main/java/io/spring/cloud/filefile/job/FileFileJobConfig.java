@@ -61,6 +61,7 @@ public class FileFileJobConfig {
 
         return new StaxEventItemReaderBuilder<Dept>()
                 .name("customXmlItemReader")
+                .encoding("UTF-8")
                 .resource(new FileSystemResource(FILE_PATH+input+".xml"))
                 .addFragmentRootElements("Dept")
                 .unmarshaller(itemMarshaller())
