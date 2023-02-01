@@ -5,8 +5,8 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Dept {
 
     Integer dept_no;

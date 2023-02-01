@@ -5,9 +5,8 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-@AllArgsConstructor
 @NoArgsConstructor
-@Data
+@AllArgsConstructor
 public class DeptDTO {
 
     Integer deptNo;
