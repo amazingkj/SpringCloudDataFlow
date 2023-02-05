@@ -41,14 +41,14 @@ public class FileWriterJobConfig {
 
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
-    private static final int chunkSize = 5;
+    private static final int chunkSize = 300;
     private static final String FILE_PATH = "C:/amazing/DataflowProject/Maven/resources/";
 
 
     @Bean
     public Job FileWriterJob() throws Exception {
         return jobBuilderFactory.get("FileWriterJob")
-                .incrementer(new RunIdIncrementer())
+                .incrementer(new DailyJobTimestamper())
                 .start(startStep())
                      .listener(new FileWriterJobExecutionListener())
                      .validator(new ParameterValidator())
@@ -76,6 +76,7 @@ public class FileWriterJobConfig {
                     log.info(">>>>> Start!");
                     return RepeatStatus.FINISHED;
                 })
+                .listener(new FileWriterStepExecutionListener())
                 .build();
     }
     @Bean
@@ -84,6 +85,7 @@ public class FileWriterJobConfig {
                 .<Dept, Dept>chunk(chunkSize)
                 .reader(itemReader())
                 .writer(csvItemWriter(null))
+                .listener(new FileWriterStepExecutionListener())
                 .build();
     }
     @Bean
@@ -92,6 +94,7 @@ public class FileWriterJobConfig {
                 .<Dept, Dept>chunk(chunkSize)
                 .reader(itemReader())
                 .writer(XmlItemWriter(null))
+                .listener(new FileWriterStepExecutionListener())
                 .build();
     }
     @Bean
@@ -100,6 +103,7 @@ public class FileWriterJobConfig {
                 .<Dept, Dept>chunk(chunkSize)
                 .reader(itemReader())
                 .writer(JsonItemWriter(null))
+                .listener(new FileWriterStepExecutionListener())
                 .build();
     }
 
@@ -109,6 +113,7 @@ public class FileWriterJobConfig {
                 .<Dept, Dept>chunk(chunkSize)
                 .reader(itemReader())
                 .writer(FixedLength_writer(null))
+                .listener(new FileWriterStepExecutionListener())
                 .build();
     }
     @Bean
@@ -143,8 +148,8 @@ public class FileWriterJobConfig {
         DelimitedLineAggregator<Dept> lineAggregator = new DelimitedLineAggregator<>();
         lineAggregator.setDelimiter(",");
         lineAggregator.setFieldExtractor(fieldExtractor);
-        //fieldExtractor.afterPropertiesSet();
-        log.warn("outputfile:{}",outputfile);
+
+        log.info("outputfile parameter: {}",outputfile);
         FlatFileItemWriter<Dept> itemWriter = new FlatFileItemWriterBuilder<Dept>()
                 .name("csvFileItemWriter")
                 .encoding("UTF-8")
@@ -162,11 +167,7 @@ public class FileWriterJobConfig {
     @StepScope
     public StaxEventItemWriter<Dept> XmlItemWriter(@Value("#{jobParameters[outputfile]}") String outputfile) {
 
-//        XStreamMarshaller itemMarshaller = new XStreamMarshaller();
-//        itemMarshaller.setAliases(Collections.singletonMap(
-//                "Dept",
-//                Dept.class
-//        ));
+        log.info("outputfile parameter: {}",outputfile);
 
         return new StaxEventItemWriterBuilder<Dept>()
                 .name("XmlItemWriter")
@@ -203,6 +204,7 @@ public class FileWriterJobConfig {
     @Bean
     @StepScope
     public JsonFileItemWriter<Dept> JsonItemWriter(@Value("#{jobParameters[outputfile]}") String outputfile) throws IOException {
+        log.info("outputfile parameter: {}",outputfile);
 
         return new JsonFileItemWriterBuilder<Dept>()
                 .name("JsonItemWriter")
@@ -215,6 +217,8 @@ public class FileWriterJobConfig {
     @Bean
     @StepScope
     public FlatFileItemWriter<Dept> FixedLength_writer(@Value("#{jobParameters[outputfile]}") String outputfile){
+
+        log.info("outputfile parameter: {}",outputfile);
 
         BeanWrapperFieldExtractor<Dept> fieldExtractor = new BeanWrapperFieldExtractor<>();
         fieldExtractor.setNames(new String[] {"dept_no", "d_name", "loc", "etc"});
