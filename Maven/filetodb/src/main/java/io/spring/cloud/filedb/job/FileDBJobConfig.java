@@ -43,6 +43,7 @@ public class FileDBJobConfig {
                 .incrementer(new RunIdIncrementer())
                 .start(JsonFileDBJob_buildStep())
                 .listener(new FiletoDBJobExecutionListener())
+                .validator(new ParameterValidator())
                 .build();
     }
 
@@ -59,11 +60,11 @@ public class FileDBJobConfig {
     /*json*/
     @Bean
     @StepScope
-    public JsonItemReader<DeptDTO> customJsonItemReader(@Value("#{jobParameters[input]}") String input){
+    public JsonItemReader<DeptDTO> customJsonItemReader(@Value("#{jobParameters[inputfile]}") String inputfile){
         return new JsonItemReaderBuilder<DeptDTO>()
                 .name("customJsonItemReader")
                 .jsonObjectReader(new JacksonJsonObjectReader<>(DeptDTO.class))
-                .resource(new FileSystemResource(FILE_PATH+input+".json"))
+                .resource(new FileSystemResource(FILE_PATH+inputfile))
                 .build();
     }
 
