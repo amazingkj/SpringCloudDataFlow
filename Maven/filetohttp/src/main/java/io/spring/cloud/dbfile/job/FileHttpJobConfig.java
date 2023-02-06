@@ -40,9 +40,10 @@ public class FileHttpJobConfig {
     @Bean
     public Job FileHttpJob() throws Exception {
         return jobBuilderFactory.get("FileHttpJob")
-                .incrementer(new RunIdIncrementer())
+                .incrementer(new DailyJobTimestamper())
                 .start(FileHttpJob_buildStep())
                 .listener(new FiletoHttpJobExecutionListener())
+                .validator(new ParameterValidator())
                 .build();
     }
 
@@ -61,11 +62,11 @@ public class FileHttpJobConfig {
     // input = "dept_JsonInput.json"
     @Bean
     @StepScope
-    public JsonItemReader<Dept> customJsonItemReader(@Value("#{jobParameters[input]}") String input) throws Exception {
+    public JsonItemReader<Dept> customJsonItemReader(@Value("#{jobParameters[inputfile]}") String inputfile) throws Exception {
          return new JsonItemReaderBuilder<Dept>()
                 .name("customJsonItemReader")
                 .jsonObjectReader(new JacksonJsonObjectReader<>(Dept.class))
-                .resource(new FileSystemResource(FILE_PATH+input+".json"))
+                .resource(new FileSystemResource(FILE_PATH+inputfile))
                 .build();
     }
 
