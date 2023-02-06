@@ -34,15 +34,16 @@ public class FileFileJobConfig {
 
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
-    private static final int chunkSize = 5;
+    private static final int chunkSize = 100;
     private static final String FILE_PATH = "C:/amazing/DataflowProject/Maven/resources/";
 
     @Bean
     public Job FileFileJob() throws Exception {
         return jobBuilderFactory.get("FileFileJob")
-                .incrementer(new RunIdIncrementer())
+                .incrementer(new DailyJobTimestamper())
                 .start(FileFileJob_buildStep())
                 .listener(new FiletoFileJobExecutionListener())
+                .validator(new ParameterValidator())
                 .build();
     }
     @Bean
@@ -57,12 +58,12 @@ public class FileFileJobConfig {
     /*xml*/
     @Bean
     @StepScope
-    public StaxEventItemReader<Dept> customXmlItemReader(@Value("#{jobParameters[input]}") String input) {
+    public StaxEventItemReader<Dept> customXmlItemReader(@Value("#{jobParameters[inputfile]}") String inputfile) {
 
         return new StaxEventItemReaderBuilder<Dept>()
                 .name("customXmlItemReader")
                 .encoding("UTF-8")
-                .resource(new FileSystemResource(FILE_PATH+input+".xml"))
+                .resource(new FileSystemResource(FILE_PATH+inputfile))
                 .addFragmentRootElements("Dept")
                 .unmarshaller(itemMarshaller())
                 .build();
@@ -92,12 +93,12 @@ public class FileFileJobConfig {
 
     @Bean
     @StepScope
-    public JsonFileItemWriter<Dept> JsonItemWriter(@Value("#{jobParameters[output]}") String output) throws IOException {
+    public JsonFileItemWriter<Dept> JsonItemWriter(@Value("#{jobParameters[outputfile]}") String outputfile) throws IOException {
 
         return new JsonFileItemWriterBuilder<Dept>()
                 .name("JsonItemWriter")
                 .jsonObjectMarshaller(new JacksonJsonObjectMarshaller<>())
-                .resource(new FileSystemResource(FILE_PATH+output+".json"))
+                .resource(new FileSystemResource(FILE_PATH+outputfile))
                 .build();
 
 

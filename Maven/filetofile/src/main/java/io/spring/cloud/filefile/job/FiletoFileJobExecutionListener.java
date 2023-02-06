@@ -26,9 +26,6 @@ public class FiletoFileJobExecutionListener implements JobExecutionListener {
         log.info("==========================");
         log.info("총 데이터 처리 {}건, 처리 시간 {}millis", sum, time);
 
-        //dept2.size()
-
-
     }
 
 
