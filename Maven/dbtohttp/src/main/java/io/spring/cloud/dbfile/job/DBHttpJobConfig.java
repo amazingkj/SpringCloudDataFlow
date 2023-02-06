@@ -31,13 +31,14 @@ public class DBHttpJobConfig {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
     private final DataSource dataSource;
-    private static final int chunkSize = 5;
+    private static final int chunkSize = 100;
     private final RestTemplate restTemplate;
 
     @Bean
     public Job DBHttpJob() throws Exception {
         return jobBuilderFactory.get("DBHttpJob")
                 .incrementer(new RunIdIncrementer())
+                .listener(new DBtohttpJobExecutionListener())
                 .start(DBHttpJob_buildStep())
                 .build();
     }

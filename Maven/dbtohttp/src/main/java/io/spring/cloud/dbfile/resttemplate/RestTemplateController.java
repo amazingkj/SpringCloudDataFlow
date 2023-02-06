@@ -14,11 +14,6 @@ public class RestTemplateController {
 
     private final RestTemplateservice restTemplateservice;
 
-    //    @GetMapping("")
-     //  public void get(){
-     //      restTemplateservice.postForObject();
-    // }
-
     @GetMapping("")
     public void post(){
         restTemplateservice.postForObject();
