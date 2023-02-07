@@ -5,7 +5,7 @@ spring:
     web-application-type: none
   batch:
     jdbc:
-      initialize-schema: "embedded"
+      initialize-schema: "always"
   datasource:
     url: jdbc:mysql://localhost:3306/second?allowPublicKeyRetrieval=true
     driver-class-name: com.mysql.cj.jdbc.Driver

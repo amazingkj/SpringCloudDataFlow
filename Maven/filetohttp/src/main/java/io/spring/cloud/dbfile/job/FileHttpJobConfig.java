@@ -59,7 +59,7 @@ public class FileHttpJobConfig {
 
 
     /*json*/
-    // input = "dept_JsonInput.json"
+
     @Bean
     @StepScope
     public JsonItemReader<Dept> customJsonItemReader(@Value("#{jobParameters[inputfile]}") String inputfile) throws Exception {

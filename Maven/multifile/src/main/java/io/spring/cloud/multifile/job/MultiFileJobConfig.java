@@ -74,7 +74,7 @@ public class MultiFileJobConfig {
                 return RepeatStatus.FINISHED;
             })
             .build();
-}
+    }
     @Bean
     @JobScope
     public Step MultiJobcsv_buildStep(@Value("#{jobParameters[version]}") String version){

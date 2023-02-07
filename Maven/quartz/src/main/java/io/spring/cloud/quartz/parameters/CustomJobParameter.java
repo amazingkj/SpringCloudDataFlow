@@ -31,10 +31,7 @@ public class CustomJobParameter {
 
 
     @Value("${custom.task.name}")
-    public void setName(String name) {
-        this.name = name;
-    }
-
+    public void setName(String name) { this.name = name; }
 
     @Value("${custom.task.properties}")
     public void setProperties(String properties) {

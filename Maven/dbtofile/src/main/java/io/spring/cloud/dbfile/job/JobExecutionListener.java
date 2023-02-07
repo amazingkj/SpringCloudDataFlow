@@ -11,12 +11,11 @@ public class JobExecutionListener implements org.springframework.batch.core.JobE
 
     @Override
     public void beforeJob(JobExecution jobExecution) {
-        log.info("DB to File 배치 프로그램");
+        log.info("DB to File (jdbc > fixed length txt) 배치 프로그램");
         log.info("==========================");
     }
     @Override
     public void afterJob(JobExecution jobExecution) {
-       // Collection<Dept2> dept2 = userRepository.findAllByUpdatedDate(LocalDate.now());
 
         long time = jobExecution.getEndTime().getTime() - jobExecution.getStartTime().getTime();
         int sum = jobExecution.getStepExecutions().stream()

@@ -12,7 +12,6 @@ public class ParameterValidator implements JobParametersValidator {
     public void validate(JobParameters jobParameters) throws JobParametersInvalidException {
         String outputfile = jobParameters.getString("outputfile");
         String inputfile = jobParameters.getString("inputfile");
-       // String multifile = jobParameters.getString("multifile");
 
         if (!StringUtils.hasText(outputfile))
             throw new JobParametersInvalidException("outputfile is missing");
@@ -20,8 +19,6 @@ public class ParameterValidator implements JobParametersValidator {
         if (!StringUtils.hasText(inputfile))
             throw new JobParametersInvalidException("inputfile is missing");
 
-      //  if (!StringUtils.hasText(multifile))
-      //     throw new JobParametersInvalidException("multifile is missing");
 
 
 

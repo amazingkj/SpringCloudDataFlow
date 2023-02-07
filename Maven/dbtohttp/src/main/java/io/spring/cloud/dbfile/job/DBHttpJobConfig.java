@@ -37,7 +37,7 @@ public class DBHttpJobConfig {
     @Bean
     public Job DBHttpJob() throws Exception {
         return jobBuilderFactory.get("DBHttpJob")
-                .incrementer(new RunIdIncrementer())
+                .incrementer(new DailyJobTimestamper())
                 .listener(new DBtohttpJobExecutionListener())
                 .start(DBHttpJob_buildStep())
                 .build();

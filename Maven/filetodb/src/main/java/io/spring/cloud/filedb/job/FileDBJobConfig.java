@@ -32,7 +32,7 @@ public class FileDBJobConfig {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
     private final DataSource dataSource;
-    private static final int chunkSize = 5;
+    private static final int chunkSize = 300;
 
     private static final String FILE_PATH = "C:/amazing/DataflowProject/Maven/resources/";
 
@@ -40,7 +40,7 @@ public class FileDBJobConfig {
     @Bean
     public Job FileDBJob() throws Exception {
         return jobBuilderFactory.get("FileDBJob")
-                .incrementer(new RunIdIncrementer())
+                .incrementer(new DailyJobTimestamper())
                 .start(JsonFileDBJob_buildStep())
                 .listener(new FiletoDBJobExecutionListener())
                 .validator(new ParameterValidator())

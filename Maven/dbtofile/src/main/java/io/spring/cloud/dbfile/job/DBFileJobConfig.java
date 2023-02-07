@@ -1,8 +1,6 @@
 package io.spring.cloud.dbfile.job;
 
-import io.spring.cloud.dbfile.UniqueRunIdIncrementer;
 import io.spring.cloud.dbfile.dto.Dept;
-import io.spring.cloud.dbfile.dto.DeptDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -10,9 +8,7 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.batch.item.database.JdbcPagingItemReader;
 import org.springframework.batch.item.database.Order;
@@ -23,8 +19,7 @@ import org.springframework.batch.item.database.support.SqlPagingQueryProviderFac
 import org.springframework.batch.item.file.FlatFileItemWriter;
 import org.springframework.batch.item.file.builder.FlatFileItemWriterBuilder;
 import org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor;
-import org.springframework.batch.item.file.transform.DelimitedLineAggregator;
-import org.springframework.batch.item.file.transform.PassThroughLineAggregator;
+import org.springframework.batch.item.file.transform.FormatterLineAggregator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,9 +47,10 @@ public class DBFileJobConfig {
     @Bean
     public Job DBFileJob() throws Exception {
         return jobBuilderFactory.get("DBFileJob")
-                .incrementer(new UniqueRunIdIncrementer())
+                .incrementer(new DailyJobTimestamper())
                 .start(DBFileJob_buildStep())
                 .listener(new JobExecutionListener())
+                .validator(new ParameterValidator())
                 .build();
     }
 
@@ -68,6 +64,7 @@ public class DBFileJobConfig {
                 .build();
     }
 
+    /*cursorReader*/
     private JdbcCursorItemReader<Dept> jdbcCursorItemReader() throws Exception {
         JdbcCursorItemReader<Dept> itemReader = new JdbcCursorItemReaderBuilder<Dept>()
                 .name("jdbcCursorItemReader")
@@ -76,20 +73,32 @@ public class DBFileJobConfig {
                 .rowMapper((rs, rowNum) -> new Dept(
                         rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4)))
                 .build();
+
         itemReader.afterPropertiesSet();
         return itemReader;
     }
 
+
     public ItemProcessor<Dept, Dept> DBFileJob_processor() {
          return dept -> new Dept(dept.getDept_no(), dept.getD_name(), dept.getLoc(), dept.getEtc());
     }
+
     @Bean
     @StepScope
-    public FlatFileItemWriter<Dept> DBFileJob_FileWriter(@Value("#{jobParameters[output]}") String output){
+    public FlatFileItemWriter<Dept> DBFileJob_FileWriter(@Value("#{jobParameters[outputfile]}") String outputfile){
+
+        BeanWrapperFieldExtractor<Dept> fieldExtractor = new BeanWrapperFieldExtractor<>();
+        fieldExtractor.setNames(new String[] {"dept_no", "d_name", "loc", "etc"});
+        fieldExtractor.afterPropertiesSet();
+
+        FormatterLineAggregator<Dept> formatterLineAggregator = new FormatterLineAggregator<>();
+        formatterLineAggregator.setFieldExtractor(fieldExtractor);
+        formatterLineAggregator.setFormat("%-5s#%15s#%5s#%5s");
+
         return new FlatFileItemWriterBuilder<Dept>()
                 .name("DBFileJob_FileWriter")
-                .resource(new FileSystemResource(FILE_PATH+output))
-                .lineAggregator(new PassThroughLineAggregator<>())
+                .resource(new FileSystemResource(FILE_PATH+outputfile))
+                .lineAggregator(formatterLineAggregator)
                 .build();
     }
 

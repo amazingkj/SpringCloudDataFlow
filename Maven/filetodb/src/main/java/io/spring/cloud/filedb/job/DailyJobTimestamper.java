@@ -1,4 +1,4 @@
-package io.spring.cloud.filewriter.job;
+package io.spring.cloud.filedb.job;
 
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -13,6 +13,7 @@ public class DailyJobTimestamper implements JobParametersIncrementer {
     public JobParameters getNext(JobParameters jobParameters) {
 
         JobParameters params = (jobParameters == null) ? new JobParameters() : jobParameters;
+
         return new JobParametersBuilder()
                 .addDate("currentDate",new Date())
                 .addLong(RUN_ID, params.getLong(RUN_ID, 0L) + 1)

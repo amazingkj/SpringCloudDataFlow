@@ -20,7 +20,6 @@ public class MultifileDecider implements JobExecutionDecider {
         public FlowExecutionStatus decide(JobExecution jobExecution, StepExecution stepExecution) {
             JobParameters jobParameters = jobExecution.getJobParameters();
 
-            String outputfile = jobParameters.getString("outputfile");
             String inputfile = jobParameters.getString("inputfile");
 
 
