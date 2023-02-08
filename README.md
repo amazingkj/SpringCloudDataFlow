@@ -1,7 +1,6 @@
 # SpringCloudDataFlow
 How to use SCDF
 
-![슬라이드1](https://user-images.githubusercontent.com/107861610/217457851-b0ece820-fc57-4099-84e9-698d08c85d74.JPG)
 ![슬라이드2](https://user-images.githubusercontent.com/107861610/217457857-6da27ec9-28ca-44b6-a3d0-538bff05ae4c.JPG)
 ![슬라이드3](https://user-images.githubusercontent.com/107861610/217457858-045ce17d-7995-4417-a9bd-6f2eb57dca60.JPG)
 ![슬라이드4](https://user-images.githubusercontent.com/107861610/217457861-a8cd7250-13bd-483e-991e-1339dec68e14.JPG)
