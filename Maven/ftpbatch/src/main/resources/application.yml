@@ -1,0 +1,30 @@
+#만들 파일 경로
+#파일 접두사
+#보낼 서버 호스트
+#ftp user
+#ftp password
+#ftp 경로
+batch:
+  file:
+    path: C:\\amazing\\DataflowProject\\Maven\\resources\\
+    prefix: test
+  ftp:
+    server: "192.168.0.71"
+    user: "user01"
+    password: "123456"
+    path: /home/user01/scdf/test
+
+spring:
+  main:
+    web-application-type: none
+  batch:
+    jdbc:
+      initialize-schema: "always"
+  datasource:
+    url: jdbc:mysql://localhost:3306/second?allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: user02
+    password: user02
+server:
+  port: 8081
+
