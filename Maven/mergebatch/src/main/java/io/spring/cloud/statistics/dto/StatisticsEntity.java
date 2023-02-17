@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class StatisticsEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // 기본 키 생성을 DB에 위임합니다. (AUTO_INCREMENT)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // DB가 기본 키 생성 (AUTO_INCREMENT)
     @Column(name= "statisticsSeq")
     private Integer statisticsSeq;
     @Column(name= "statisticsAt")

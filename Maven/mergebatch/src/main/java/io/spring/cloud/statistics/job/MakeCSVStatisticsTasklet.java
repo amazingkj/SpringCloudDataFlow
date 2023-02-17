@@ -1,7 +1,7 @@
 package io.spring.cloud.statistics.job;
 
 import io.spring.cloud.statistics.dto.AggregatedStatistics;
-import io.spring.cloud.statistics.dto.StatisticsEntityRepository;
+import io.spring.cloud.statistics.dto.StatisticsRepository;
 import io.spring.cloud.statistics.util.CustomCSVWriter;
 import io.spring.cloud.statistics.util.LocalDateTimeUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -22,14 +22,14 @@ import java.util.List;
 @StepScope
 public class MakeCSVStatisticsTasklet implements Tasklet {
 
-    private final StatisticsEntityRepository statisticsRepository;
+    private final StatisticsRepository statisticsRepository;
 
     @Value("#{jobParameters[from]}")
     private String fromString;
     @Value("#{jobParameters[to]}")
     private String toString;
 
-    public MakeCSVStatisticsTasklet( StatisticsEntityRepository statisticsRepository) {
+    public MakeCSVStatisticsTasklet( StatisticsRepository statisticsRepository) {
         this.statisticsRepository = statisticsRepository;
     }
 
@@ -48,7 +48,7 @@ public class MakeCSVStatisticsTasklet implements Tasklet {
 
         log.warn(" statisticsList  {}",statisticsList);
         List<String[]> data = new ArrayList<>();
-        data.add(new String[]{"statisticsAt", "ORG_ID_NAVER_Count", "ORG_ID_DAUM_Count", "ORG_ID_ICONLOOP_Count", "ORG_ID_ECHO_Count"});
+        data.add(new String[]{"statisticsAt", "getAllCount", "ORG_ID_NAVER_Count", "ORG_ID_DAUM_Count", "ORG_ID_ICONLOOP_Count", "ORG_ID_ECHO_Count"});
         for (AggregatedStatistics statistics : statisticsList) {
             data.add(new String[]{
                     LocalDateTimeUtils.format(statistics.getStatisticsAt()),
@@ -59,7 +59,7 @@ public class MakeCSVStatisticsTasklet implements Tasklet {
                     String.valueOf(statistics.getORG_ID_ECHO_Count()),
             });
         }
-        CustomCSVWriter.write("daily_statistics_" + LocalDateTimeUtils.format(from, LocalDateTimeUtils.YYYY_MM_DD) + ".csv", data);
+        CustomCSVWriter.write("statistics_daily_" + LocalDateTimeUtils.format(from, LocalDateTimeUtils.YYYY_MM_DD) + ".csv", data);
         return RepeatStatus.FINISHED;
 
     }

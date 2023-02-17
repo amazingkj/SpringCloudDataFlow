@@ -50,7 +50,7 @@ public class TB_GTW_TRN_TRX {
     }
 
     public enum ORG_ID{
-        NAVER, ICONLOOP, DAUM, ECHO
+        NAVER, ICONLOOP, DAUM, ECHO, TC99, EAI_ADT
     }
 
     public enum SRC_METHOD_TYPE_Status {

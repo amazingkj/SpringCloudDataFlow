@@ -13,14 +13,15 @@ public class ParameterValidator implements JobParametersValidator {
     public void validate(JobParameters jobParameters) throws JobParametersInvalidException {
 
 
-        String outputfile = jobParameters.getString("outputfile");
+        String from = jobParameters.getString("from");
+        String to = jobParameters.getString("to");
 
-        if (!StringUtils.hasText(outputfile)) {
-            throw new JobParametersInvalidException("Error : outputfile is missing");
-        }else if(!StringUtils.endsWithIgnoreCase(outputfile, "txt")){
-            log.warn("outputfile isn't txt file extension");
-            throw new JobParametersInvalidException("Error : outputfile isn't txt file extension");
-        }
+//        if (!StringUtils.hasText(outputfile)) {
+//            throw new JobParametersInvalidException("Error : outputfile is missing");
+//        }else if(!StringUtils.endsWithIgnoreCase(outputfile, "txt")){
+//            log.warn("outputfile isn't txt file extension");
+//            throw new JobParametersInvalidException("Error : outputfile isn't txt file extension");
+//        }
 
 
     }

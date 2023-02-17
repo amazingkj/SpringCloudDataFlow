@@ -1,7 +1,7 @@
 package io.spring.cloud.statistics.job;
 
 import io.spring.cloud.statistics.dto.StatisticsEntity;
-import io.spring.cloud.statistics.dto.StatisticsEntityRepository;
+import io.spring.cloud.statistics.dto.StatisticsRepository;
 import io.spring.cloud.statistics.dto.TB_GTW_TRN_TRX;
 import io.spring.cloud.statistics.util.LocalDateTimeUtils;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @Configuration
 public class MakeStatisticsJobConfig {
-    private final StatisticsEntityRepository statisticsEntityRepository;
+    private final StatisticsRepository statisticsRepository;
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
     private final EntityManagerFactory entityManagerFactory;
@@ -114,7 +114,7 @@ public class MakeStatisticsJobConfig {
 
             }
             final List<StatisticsEntity> statisticsEntities = new ArrayList<>(statisticsEntityMap.values());
-            statisticsEntityRepository.saveAll(statisticsEntities);
+            statisticsRepository.saveAll(statisticsEntities);
 
         };
     }

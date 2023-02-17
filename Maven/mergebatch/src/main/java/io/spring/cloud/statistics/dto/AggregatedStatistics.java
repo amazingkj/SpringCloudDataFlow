@@ -1,9 +1,6 @@
 package io.spring.cloud.statistics.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -19,7 +16,7 @@ public class AggregatedStatistics {
     private long ORG_ID_ICONLOOP_Count;
     private long ORG_ID_DAUM_Count;
     private long ORG_ID_ECHO_Count;
-    private long SRC_METHOD_TYPE_Count;
+
 
     public void merge(final AggregatedStatistics statistics) {
         this.allCount += statistics.getAllCount();
